@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Weather Forecast Dashboard - Interactive city selector, current conditions, 5-day forecast, and meteorological trend analytics.">
+  <title>SkyCast — Interactive Weather Dashboard | Selected Cities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Header Bar -->
+    <header class="top-nav">
+      <div class="brand">
+        <div class="brand-icon">🌦️</div>
+        <div>
+          <h1 class="brand-title">SkyCast Dashboard</h1>
+          <p class="brand-sub">Real-Time Forecast & Climate Intelligence</p>
+        </div>
+      </div>
+
+      <!-- Controls: Unit Toggle & Live Clock -->
+      <div class="nav-actions">
+        <div class="unit-toggle" id="unitToggle">
+          <button class="unit-btn active" id="btnCelsius" data-unit="C">°C</button>
+          <button class="unit-btn" id="btnFahrenheit" data-unit="F">°F</button>
+        </div>
+        <div class="live-clock" id="liveClock">--:--:--</div>
+      </div>
+    </header>
+
+    <!-- City Selection Hub (Primary Feature Requested) -->
+    <section class="city-selector-card" id="citySelectorCard">
+      <div class="selector-header">
+        <div class="selector-title-group">
+          <span class="selector-badge">SELECT CITY</span>
+          <h2 class="selector-heading">Choose a City to View Weather</h2>
+        </div>
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="cityInput" placeholder="Type custom city and press Enter..." autocomplete="off">
+          <button id="btnSearch" class="btn-search">Search</button>
+        </div>
+      </div>
+
+      <!-- Dropdown Selector -->
+      <div class="dropdown-wrapper">
+        <label for="cityDropdown" class="dropdown-label">📍 Select from Major Global & Indian Hubs:</label>
+        <div class="select-container">
+          <select id="cityDropdown" class="custom-select">
+            <optgroup label="India">
+              <option value="Bengaluru" selected>Bengaluru, India</option>
+              <option value="Mumbai">Mumbai, India</option>
+              <option value="Delhi">Delhi, India</option>
+              <option value="Hyderabad">Hyderabad, India</option>
+              <option value="Chennai">Chennai, India</option>
+              <option value="Kolkata">Kolkata, India</option>
+              <option value="Pune">Pune, India</option>
+              <option value="Jaipur">Jaipur, India</option>
+            </optgroup>
+            <optgroup label="International">
+              <option value="London">London, United Kingdom</option>
+              <option value="New York">New York, United States</option>
+              <option value="Tokyo">Tokyo, Japan</option>
+              <option value="Paris">Paris, France</option>
+              <option value="Dubai">Dubai, United Arab Emirates</option>
+              <option value="Singapore">Singapore</option>
+              <option value="Sydney">Sydney, Australia</option>
+              <option value="Toronto">Toronto, Canada</option>
+              <option value="Berlin">Berlin, Germany</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <!-- Quick City Pill Chips -->
+      <div class="chips-label">⚡ Quick 1-Click City Selectors:</div>
+      <div class="chips-container" id="chipsContainer">
+        <button class="chip active" data-city="Bengaluru">📍 Bengaluru</button>
+        <button class="chip" data-city="Mumbai">📍 Mumbai</button>
+        <button class="chip" data-city="Delhi">📍 Delhi</button>
+        <button class="chip" data-city="Hyderabad">📍 Hyderabad</button>
+        <button class="chip" data-city="London">📍 London</button>
+        <button class="chip" data-city="New York">📍 New York</button>
+        <button class="chip" data-city="Tokyo">📍 Tokyo</button>
+        <button class="chip" data-city="Paris">📍 Paris</button>
+        <button class="chip" data-city="Dubai">📍 Dubai</button>
+        <button class="chip" data-city="Singapore">📍 Singapore</button>
+        <button class="chip" data-city="Sydney">📍 Sydney</button>
+      </div>
+    </section>
+
+    <!-- Main Weather Display Area -->
+    <div class="dashboard-grid">
+      <!-- Left Column: Current Weather & Analytics -->
+      <div class="col-main">
+        <!-- Hero Weather Card -->
+        <div class="hero-weather-card" id="heroCard">
+          <div class="hero-top">
+            <div class="hero-location">
+              <div class="city-name-row">
+                <h3 class="hero-city" id="heroCity">Bengaluru</h3>
+                <span class="country-pill" id="heroCountry">IN</span>
+                <button class="btn-fav-star" id="btnFavStar" title="Toggle Favourite">★</button>
+              </div>
+              <p class="hero-timestamp" id="heroTimestamp">Updated just now</p>
+            </div>
+            <div class="hero-condition-badge" id="heroCondition">Clear Sky</div>
+          </div>
+
+          <div class="hero-body">
+            <div class="hero-icon-temp">
+              <div class="hero-icon" id="heroIcon">☀️</div>
+              <div class="hero-temp-wrapper">
+                <span class="hero-temp" id="heroTemp">25</span>
+                <span class="hero-unit" id="heroUnit">°C</span>
+              </div>
+            </div>
+            <div class="hero-extra-brief">
+              <div class="feels-like">Feels like <strong id="heroFeels">26°C</strong></div>
+              <div class="high-low">High: <span id="heroMax">29°C</span> • Low: <span id="heroMin">19°C</span></div>
+              <p class="summary-line" id="heroSummary">Live meteorological summary loading...</p>
+            </div>
+          </div>
+
+          <!-- Parameter Metrics Grid -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <span class="metric-icon">💧</span>
+              <div class="metric-info">
+                <span class="metric-label">Humidity</span>
+                <span class="metric-value" id="valHumidity">65%</span>
+              </div>
+            </div>
+            <div class="metric-card">
+              <span class="metric-icon">💨</span>
+              <div class="metric-info">
+                <span class="metric-label">Wind Speed</span>
+                <span class="metric-value" id="valWind">3.5 m/s</span>
+              </div>
+            </div>
+            <div class="metric-card">
+              <span class="metric-icon">⏲️</span>
+              <div class="metric-info">
+                <span class="metric-label">Pressure</span>
+                <span class="metric-value" id="valPressure">1013 hPa</span>
+              </div>
+            </div>
+            <div class="metric-card">
+              <span class="metric-icon">🌧️</span>
+              <div class="metric-info">
+                <span class="metric-label">Rain Chance</span>
+                <span class="metric-value" id="valPop">15%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Extended Meteorological Forecast Container (5-Day / 7-Day Week) -->
+        <div class="forecast-section">
+          <div class="forecast-section-header">
+            <h4 class="section-title" id="forecastSectionTitle">📅 Extended Forecast</h4>
+            <div class="period-toggle-group">
+              <button class="period-toggle-btn active" id="btnMain5Day" data-days="5">5 Days</button>
+              <button class="period-toggle-btn" id="btnMain7Day" data-days="7">Week (7 Days)</button>
+            </div>
+          </div>
+          <div class="forecast-cards-row" id="forecastCardsRow">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+
+        <!-- Temperature Trend Chart (Canvas) -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h4 id="chartMainHeading">📊 Temperature Trend & Diurnal Cycle</h4>
+            <span class="chart-legend" id="chartLegendText">Daily High vs Low Curves</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="trendChart" width="700" height="220"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Multi-City Quick Comparison & Saved Favourites -->
+      <div class="col-side">
+        <!-- Multi-City Comparison Panel -->
+        <div class="side-card comp-panel-card">
+          <div class="side-card-header">
+            <div>
+              <h4>🌐 City Comparison Hub</h4>
+              <p class="side-subtitle">Compare cities & view forecast graphs</p>
+            </div>
+            <span class="side-badge" id="compCountBadge">5 Cities</span>
+          </div>
+
+          <!-- Comparison Search & Add Bar -->
+          <div class="comp-search-box">
+            <div class="comp-input-wrap">
+              <span class="comp-search-icon">🔍</span>
+              <input type="text" id="compSearchInput" class="comp-input" placeholder="Search city to compare (e.g. Paris)..." autocomplete="off">
+            </div>
+            <button id="btnAddCompCity" class="btn-comp-add" title="Add city to comparison">+ Add</button>
+          </div>
+          <div class="comp-quick-suggestions" id="compSuggestions" style="display: none;"></div>
+
+          <!-- Action Bar: View Comparison Graph & Period Toggle -->
+          <div class="comp-graph-action-bar">
+            <button id="btnOpenCompModal" class="btn-view-comp-graph">
+              📈 Compare Forecast Graph
+            </button>
+            <div class="comp-period-switch">
+              <button class="comp-p-btn active" data-period="5" id="compPeriod5">5 Days</button>
+              <button class="comp-p-btn" data-period="7" id="compPeriod7">Week</button>
+            </div>
+          </div>
+
+          <p class="side-intro">Click city to view, or ✕ to remove from comparison:</p>
+          <div class="comparison-list" id="comparisonList">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Saved Favourites -->
+        <div class="side-card">
+          <div class="side-card-header">
+            <h4>⭐ Bookmarked Cities</h4>
+          </div>
+          <div class="fav-list" id="favList">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Multi-City Comparison Graph Modal -->
+  <div class="modal-overlay" id="compModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-tag">MULTI-CITY COMPARISON</span>
+          <h3 class="modal-title" id="modalHeading">Forecast Temperature Comparison</h3>
+        </div>
+        <div class="modal-top-actions">
+          <div class="period-toggle-group">
+            <button class="period-toggle-btn active" id="modalToggle5" data-days="5">5-Day Forecast</button>
+            <button class="period-toggle-btn" id="modalToggle7" data-days="7">Week's Forecast (7 Days)</button>
+          </div>
+          <button class="btn-modal-close" id="btnCloseModal" title="Close modal">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <!-- Canvas comparison chart -->
+        <div class="modal-chart-box">
+          <canvas id="multiCityCanvas" width="820" height="320"></canvas>
+        </div>
+
+        <!-- City Legend -->
+        <div class="comp-legend-container" id="compLegendContainer">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="comp-table-container">
+          <table class="comp-data-table">
+            <thead>
+              <tr>
+                <th>City</th>
+                <th>Current</th>
+                <th>Forecast Avg</th>
+                <th>Temp Range</th>
+                <th>Condition</th>
+                <th>Rain Risk</th>
+              </tr>
+            </thead>
+            <tbody id="compTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
